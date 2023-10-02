@@ -19,23 +19,23 @@ def main(argv):
 
     gpx = gpxpy.gpx.GPX()
 
-    # Create first track in our GPX:
-    gpx_track = gpxpy.gpx.GPXTrack()
-    gpx.tracks.append(gpx_track)
-
-    # Create first segment in our GPX track:
-    gpx_segment = gpxpy.gpx.GPXTrackSegment()
-    gpx_track.segments.append(gpx_segment)
-
     with open(input, 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             [gui, loc_type, lo, la, heading, accuracy, speed, distance, is_back, step_type, altitude] = row
             print(f'append {lo} {la}')
+            # Create first track in our GPX:
+            gpx_track = gpxpy.gpx.GPXTrack()
+            gpx.tracks.append(gpx_track)
+            # Create first segment in our GPX track:
+            gpx_segment = gpxpy.gpx.GPXTrackSegment()
             gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(la, lo, elevation=heading, speed=speed))
+            gpx_track.segments.append(gpx_segment)
         print(f'write {len(row)} lines to gpx')
     with open(output, 'w') as gpxfile:
-        gpxfile.write(gpx.to_xml())
+        out = gpx.to_xml()
+        print(f'{out}')
+        gpxfile.write(out)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
